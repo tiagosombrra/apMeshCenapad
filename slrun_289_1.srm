@@ -1,0 +1,63 @@
+#!/bin/sh
+#SBATCH -J 289_1
+#SBATCH --partition medium
+#SBATCH -t 6:00:00
+#SBATCH --ntasks 1
+#SBATCH --nodes 1
+#SBATCH --exclusive
+#SBATCH --cpus-per-task 1
+#SBATCH -o /dev/null
+
+ulimit -s unlimited
+ulimit -a
+s
+# Nó de execução
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/0.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/0.out 2>&1
+date >> Saida/289/11/0.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/1.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/1.out 2>&1
+date >> Saida/289/11/1.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/2.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/2.out 2>&1
+date >> Saida/289/11/2.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/3.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/3.out 2>&1
+date >> Saida/289/11/3.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/4.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/4.out 2>&1
+date >> Saida/289/11/4.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/5.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/5.out 2>&1
+date >> Saida/289/11/5.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/6.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/6.out 2>&1
+date >> Saida/289/11/6.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/7.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/7.out 2>&1
+date >> Saida/289/11/7.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/8.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/8.out 2>&1
+date >> Saida/289/11/8.out 2>&1
+
+echo "Nó de Execução ${SLURM_JOB_NODELIST}"
+date >> Saida/289/11/9.out 2>&1
+srun --mpi=pmi2 ./apMesh 1 1 Entrada/mountain_289_patches.bp writeOff >> Saida/289/11/9.out 2>&1
+date >> Saida/289/11/9.out 2>&1

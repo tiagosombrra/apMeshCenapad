@@ -154,8 +154,8 @@
 #ifdef __APPLE__
 #include <Eigen/Eigen>
 #elif __linux__
-#include "../../Libs/Eigen/Eigen/Dense"
-#include "../../Libs/Eigen/Eigen/Eigen"
+#include "../../Libs/Eigen/Dense"
+#include "../../Libs/Eigen/Eigen"
 #else
 #error "Unknown compiler"
 #endif

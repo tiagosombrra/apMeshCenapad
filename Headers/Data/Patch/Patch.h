@@ -14,23 +14,22 @@ This source code is under GNU General Public License v3 */
 
 #include "../../Data/Mesh/SubMalha.h"
 
-//class SubMalha;
+// class SubMalha;
 
-class Patch
-{
-protected :
-    SubMalha* malha;
+class Patch {
+ protected:
+  SubMalha* malha;
 
-public :
-    unsigned long id;
-    void setMalha ( SubMalha* m );
-    SubMalha* getMalha (  ) const ;
+ public:
+  unsigned long id;
+  void setMalha(SubMalha* m);
+  SubMalha* getMalha() const;
 
-    Patch  ( );
-    Patch ( Patch * );
-    ~Patch ( );
-    unsigned long getId() const;
-    void setId(unsigned long value);
+  Patch();
+  Patch(Patch*);
+  ~Patch();
+  unsigned long getId() const;
+  void setId(unsigned long value);
 };
 
 #endif

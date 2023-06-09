@@ -7,23 +7,22 @@
 
 #include "Message.h"
 
-namespace Parallel
-{
-	class MPIMessage : public Parallel::Message
-	{
-	public:
+namespace Parallel {
+class MPIMessage : public Parallel::Message {
+ public:
+  MPIMessage();
+  MPIMessage(Int message);
+  virtual ~MPIMessage();
 
-		MPIMessage();
-		MPIMessage(Int message);
-		virtual ~MPIMessage();
+  virtual UInt packSize(const Communicator *comm) const;
+  virtual void pack(const Communicator *comm, char *buffer, Int size,
+                    Int &position) const;
+  virtual Package pack(const Communicator *comm) const;
+  virtual void unpack(const Communicator *comm, const Package &p,
+                      Int &position);
+};
+}  // namespace Parallel
 
-		virtual UInt packSize(const Communicator *comm) const;
-		virtual void pack(const Communicator *comm, char *buffer, Int size, Int &position) const;
-		virtual Package pack(const Communicator *comm) const;
-		virtual void unpack(const Communicator *comm, const Package &p, Int &position);
-	};
-}
+#endif  //#if USE_MPI
 
-#endif //#if USE_MPI
-
-#endif //#ifndef _PARALLEL_MPI_MESSAGE_H_
+#endif  //#ifndef _PARALLEL_MPI_MESSAGE_H_

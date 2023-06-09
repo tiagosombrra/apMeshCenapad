@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Debug",
+      "hidden": false,
+      "description": "Debug configuration",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "USE_MPI": false,
+        "MPI_C_COMPILER": "/usr/local/bin/mpicc",
+        "MPI_CXX_COMPILER": "/usr/local/bin/mpicxx"
+      }
+    },
+    {
+      "name": "Release",
+      "hidden": false,
+      "description": "Release configuration",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "USE_MPI": false,
+        "MPI_C_COMPILER": "/usr/local/bin/mpicc",
+        "MPI_CXX_COMPILER": "/usr/local/bin/mpicxx"
+      }
+    }
+  ]
+}

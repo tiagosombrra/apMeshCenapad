@@ -8,25 +8,24 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "main.h"
-
 #include <Eigen/CXX11/Tensor>
 
-using Eigen::Tensor;
+#include "main.h"
+
 using Eigen::array;
+using Eigen::Tensor;
 using Eigen::Tuple;
 
 template <int DataLayout>
-static void test_simple_index_tuples()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_simple_index_tuples() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
 
-  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2,3,5,7);
+  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2, 3, 5, 7);
   index_tuples = tensor.index_tuples();
 
-  for (DenseIndex n = 0; n < 2*3*5*7; ++n) {
+  for (DenseIndex n = 0; n < 2 * 3 * 5 * 7; ++n) {
     const Tuple<DenseIndex, float>& v = index_tuples.coeff(n);
     VERIFY_IS_EQUAL(v.first, n);
     VERIFY_IS_EQUAL(v.second, tensor.coeff(n));
@@ -34,31 +33,29 @@ static void test_simple_index_tuples()
 }
 
 template <int DataLayout>
-static void test_index_tuples_dim()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_index_tuples_dim() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
 
-  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2,3,5,7);
+  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2, 3, 5, 7);
 
   index_tuples = tensor.index_tuples();
 
   for (Eigen::DenseIndex n = 0; n < tensor.size(); ++n) {
-    const Tuple<DenseIndex, float>& v = index_tuples(n); //(i, j, k, l);
+    const Tuple<DenseIndex, float>& v = index_tuples(n);  //(i, j, k, l);
     VERIFY_IS_EQUAL(v.first, n);
     VERIFY_IS_EQUAL(v.second, tensor(n));
   }
 }
 
 template <int DataLayout>
-static void test_argmax_tuple_reducer()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_argmax_tuple_reducer() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
 
-  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2,3,5,7);
+  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2, 3, 5, 7);
   index_tuples = tensor.index_tuples();
 
   Tensor<Tuple<DenseIndex, float>, 0, DataLayout> reduced;
@@ -84,13 +81,12 @@ static void test_argmax_tuple_reducer()
 }
 
 template <int DataLayout>
-static void test_argmin_tuple_reducer()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_argmin_tuple_reducer() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
 
-  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2,3,5,7);
+  Tensor<Tuple<DenseIndex, float>, 4, DataLayout> index_tuples(2, 3, 5, 7);
   index_tuples = tensor.index_tuples();
 
   Tensor<Tuple<DenseIndex, float>, 0, DataLayout> reduced;
@@ -116,12 +112,11 @@ static void test_argmin_tuple_reducer()
 }
 
 template <int DataLayout>
-static void test_simple_argmax()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_simple_argmax() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
-  tensor(0,0,0,0) = 10.0;
+  tensor(0, 0, 0, 0) = 10.0;
 
   Tensor<DenseIndex, 0, DataLayout> tensor_argmax;
 
@@ -129,20 +124,19 @@ static void test_simple_argmax()
 
   VERIFY_IS_EQUAL(tensor_argmax(0), 0);
 
-  tensor(1,2,4,6) = 20.0;
+  tensor(1, 2, 4, 6) = 20.0;
 
   tensor_argmax = tensor.argmax();
 
-  VERIFY_IS_EQUAL(tensor_argmax(0), 2*3*5*7 - 1);
+  VERIFY_IS_EQUAL(tensor_argmax(0), 2 * 3 * 5 * 7 - 1);
 }
 
 template <int DataLayout>
-static void test_simple_argmin()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
+static void test_simple_argmin() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   tensor = (tensor + tensor.constant(0.5)).log();
-  tensor(0,0,0,0) = -10.0;
+  tensor(0, 0, 0, 0) = -10.0;
 
   Tensor<DenseIndex, 0, DataLayout> tensor_argmin;
 
@@ -150,18 +144,17 @@ static void test_simple_argmin()
 
   VERIFY_IS_EQUAL(tensor_argmin(0), 0);
 
-  tensor(1,2,4,6) = -20.0;
+  tensor(1, 2, 4, 6) = -20.0;
 
   tensor_argmin = tensor.argmin();
 
-  VERIFY_IS_EQUAL(tensor_argmin(0), 2*3*5*7 - 1);
+  VERIFY_IS_EQUAL(tensor_argmin(0), 2 * 3 * 5 * 7 - 1);
 }
 
 template <int DataLayout>
-static void test_argmax_dim()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
-  std::vector<int> dims {2, 3, 5, 7};
+static void test_argmax_dim() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
+  std::vector<int> dims{2, 3, 5, 7};
 
   for (int dim = 0; dim < 4; ++dim) {
     tensor.setRandom();
@@ -173,9 +166,13 @@ static void test_argmax_dim()
       for (int j = 0; j < 3; ++j) {
         for (int k = 0; k < 5; ++k) {
           for (int l = 0; l < 7; ++l) {
-            ix[0] = i; ix[1] = j; ix[2] = k; ix[3] = l;
+            ix[0] = i;
+            ix[1] = j;
+            ix[2] = k;
+            ix[3] = l;
             if (ix[dim] != 0) continue;
-            // suppose dim == 1, then for all i, k, l, set tensor(i, 0, k, l) = 10.0
+            // suppose dim == 1, then for all i, k, l, set tensor(i, 0, k, l)
+            // = 10.0
             tensor(ix) = 10.0;
           }
         }
@@ -185,7 +182,7 @@ static void test_argmax_dim()
     tensor_argmax = tensor.argmax(dim);
 
     VERIFY_IS_EQUAL(tensor_argmax.size(),
-                    ptrdiff_t(2*3*5*7 / tensor.dimension(dim)));
+                    ptrdiff_t(2 * 3 * 5 * 7 / tensor.dimension(dim)));
     for (ptrdiff_t n = 0; n < tensor_argmax.size(); ++n) {
       // Expect max to be in the first index of the reduced dimension
       VERIFY_IS_EQUAL(tensor_argmax.data()[n], 0);
@@ -195,9 +192,13 @@ static void test_argmax_dim()
       for (int j = 0; j < 3; ++j) {
         for (int k = 0; k < 5; ++k) {
           for (int l = 0; l < 7; ++l) {
-            ix[0] = i; ix[1] = j; ix[2] = k; ix[3] = l;
+            ix[0] = i;
+            ix[1] = j;
+            ix[2] = k;
+            ix[3] = l;
             if (ix[dim] != tensor.dimension(dim) - 1) continue;
-            // suppose dim == 1, then for all i, k, l, set tensor(i, 2, k, l) = 20.0
+            // suppose dim == 1, then for all i, k, l, set tensor(i, 2, k, l)
+            // = 20.0
             tensor(ix) = 20.0;
           }
         }
@@ -207,7 +208,7 @@ static void test_argmax_dim()
     tensor_argmax = tensor.argmax(dim);
 
     VERIFY_IS_EQUAL(tensor_argmax.size(),
-                    ptrdiff_t(2*3*5*7 / tensor.dimension(dim)));
+                    ptrdiff_t(2 * 3 * 5 * 7 / tensor.dimension(dim)));
     for (ptrdiff_t n = 0; n < tensor_argmax.size(); ++n) {
       // Expect max to be in the last index of the reduced dimension
       VERIFY_IS_EQUAL(tensor_argmax.data()[n], tensor.dimension(dim) - 1);
@@ -216,10 +217,9 @@ static void test_argmax_dim()
 }
 
 template <int DataLayout>
-static void test_argmin_dim()
-{
-  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
-  std::vector<int> dims {2, 3, 5, 7};
+static void test_argmin_dim() {
+  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
+  std::vector<int> dims{2, 3, 5, 7};
 
   for (int dim = 0; dim < 4; ++dim) {
     tensor.setRandom();
@@ -231,9 +231,13 @@ static void test_argmin_dim()
       for (int j = 0; j < 3; ++j) {
         for (int k = 0; k < 5; ++k) {
           for (int l = 0; l < 7; ++l) {
-            ix[0] = i; ix[1] = j; ix[2] = k; ix[3] = l;
+            ix[0] = i;
+            ix[1] = j;
+            ix[2] = k;
+            ix[3] = l;
             if (ix[dim] != 0) continue;
-            // suppose dim == 1, then for all i, k, l, set tensor(i, 0, k, l) = -10.0
+            // suppose dim == 1, then for all i, k, l, set tensor(i, 0, k, l) =
+            // -10.0
             tensor(ix) = -10.0;
           }
         }
@@ -243,7 +247,7 @@ static void test_argmin_dim()
     tensor_argmin = tensor.argmin(dim);
 
     VERIFY_IS_EQUAL(tensor_argmin.size(),
-                    ptrdiff_t(2*3*5*7 / tensor.dimension(dim)));
+                    ptrdiff_t(2 * 3 * 5 * 7 / tensor.dimension(dim)));
     for (ptrdiff_t n = 0; n < tensor_argmin.size(); ++n) {
       // Expect min to be in the first index of the reduced dimension
       VERIFY_IS_EQUAL(tensor_argmin.data()[n], 0);
@@ -253,9 +257,13 @@ static void test_argmin_dim()
       for (int j = 0; j < 3; ++j) {
         for (int k = 0; k < 5; ++k) {
           for (int l = 0; l < 7; ++l) {
-            ix[0] = i; ix[1] = j; ix[2] = k; ix[3] = l;
+            ix[0] = i;
+            ix[1] = j;
+            ix[2] = k;
+            ix[3] = l;
             if (ix[dim] != tensor.dimension(dim) - 1) continue;
-            // suppose dim == 1, then for all i, k, l, set tensor(i, 2, k, l) = -20.0
+            // suppose dim == 1, then for all i, k, l, set tensor(i, 2, k, l) =
+            // -20.0
             tensor(ix) = -20.0;
           }
         }
@@ -265,7 +273,7 @@ static void test_argmin_dim()
     tensor_argmin = tensor.argmin(dim);
 
     VERIFY_IS_EQUAL(tensor_argmin.size(),
-                    ptrdiff_t(2*3*5*7 / tensor.dimension(dim)));
+                    ptrdiff_t(2 * 3 * 5 * 7 / tensor.dimension(dim)));
     for (ptrdiff_t n = 0; n < tensor_argmin.size(); ++n) {
       // Expect min to be in the last index of the reduced dimension
       VERIFY_IS_EQUAL(tensor_argmin.data()[n], tensor.dimension(dim) - 1);
@@ -273,8 +281,7 @@ static void test_argmin_dim()
   }
 }
 
-void test_cxx11_tensor_argmax()
-{
+void test_cxx11_tensor_argmax() {
   CALL_SUBTEST(test_simple_index_tuples<RowMajor>());
   CALL_SUBTEST(test_simple_index_tuples<ColMajor>());
   CALL_SUBTEST(test_index_tuples_dim<RowMajor>());

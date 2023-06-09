@@ -14,15 +14,14 @@ This source code is under GNU General Public License v3 */
 
 #include "Gerador.h"
 
-class GeradorAdaptativo : public Gerador
-{
-protected :
-    virtual SubMalha* malhaInicial ( );
-    virtual double erroGlobal ( );
+class GeradorAdaptativo : public Gerador {
+ protected:
+  virtual SubMalha* malhaInicial();
+  virtual double erroGlobal();
 
-public :
-    GeradorAdaptativo (  );
-    //GeradorAdaptativo ( Modelo& modelo );
+ public:
+  GeradorAdaptativo();
+  // GeradorAdaptativo ( Modelo& modelo );
 };
 
 #endif

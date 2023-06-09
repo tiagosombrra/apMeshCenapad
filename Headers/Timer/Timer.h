@@ -2,11 +2,13 @@
 #define TIMER_H
 
 #include <stdio.h>
-#include <cstdio>
-#include <sstream>
-#include <fstream>
-#include "../Data/Definitions.h"
 #include <sys/time.h>
+
+#include <cstdio>
+#include <fstream>
+#include <sstream>
+
+#include "../Data/Definitions.h"
 
 using namespace std;
 
@@ -25,47 +27,44 @@ extern std::string numberProcess;
 //[9]= Timer send and recv process
 //[10]= Full
 
-class Timer
-{
+class Timer {
+ public:
+  Timer();
+  Timer(int sizeRank, int sizeThread, int sizeType);
+  bool openFile(string);
+  void closeFile();
+  bool deleteFile(string);
 
-public:
+  void initTimerParallel(int _rank, int _thread, int _type);
+  void endTimerParallel(int _rank, int _thread, int _type);
+  void calculateTime(int _rank, int _thread, int _type);
+  void printTime();
+  double getRankThreadTime(int _rank, int _thread, int _type);
+  vector<double> getMaxTime();
+  vector<double> getMinTime();
 
-    Timer();
-    Timer(int sizeRank, int sizeThread, int sizeType);
-    bool openFile(string);
-    void closeFile();
-    bool deleteFile(string);
+  vector<vector<vector<timeval>>> getTimerParallelInit() const;
+  void setTimerParallelInit(const vector<vector<vector<timeval>>> &value);
 
-    void initTimerParallel(int _rank, int _thread, int _type);
-    void endTimerParallel(int _rank, int _thread, int _type);
-    void calculateTime(int _rank, int _thread, int _type);
-    void printTime();
-    double getRankThreadTime(int _rank, int _thread, int _type);
-    vector<double> getMaxTime();
-    vector<double> getMinTime();
+  vector<vector<vector<timeval>>> getTimerParallelEnd() const;
+  void setTimerParallelEnd(const vector<vector<vector<timeval>>> &value);
 
-    vector<vector<vector<timeval> > > getTimerParallelInit() const;
-    void setTimerParallelInit(const vector<vector<vector<timeval> > > &value);
+  vector<vector<vector<double>>> getTimerParallel() const;
+  void setTimerParallel(const vector<vector<vector<double>>> &value);
 
-    vector<vector<vector<timeval> > > getTimerParallelEnd() const;
-    void setTimerParallelEnd(const vector<vector<vector<timeval> > > &value);
+  // private:
 
-    vector<vector<vector<double> > > getTimerParallel() const;
-    void setTimerParallel(const vector<vector<vector<double> > > &value);
+  vector<vector<vector<double>>> timerParallelInitMpi;
+  vector<vector<vector<double>>> timerParallelEndMpi;
 
-//private:
+  vector<vector<vector<timeval>>> timerParallelInit;
+  vector<vector<vector<timeval>>> timerParallelEnd;
 
-    vector<vector<vector<double>>> timerParallelInitMpi;
-    vector<vector<vector<double>>> timerParallelEndMpi;
+  vector<vector<vector<double>>> timerParallel;
 
-    vector<vector<vector<timeval>>> timerParallelInit;
-    vector<vector<vector<timeval>>> timerParallelEnd;
-
-    vector<vector<vector<double>>> timerParallel;
-
-    string locationName;
-    fstream file;
-    //clock_t time_clock;
+  string locationName;
+  fstream file;
+  // clock_t time_clock;
 };
 
-#endif // TIMER_H
+#endif  // TIMER_H

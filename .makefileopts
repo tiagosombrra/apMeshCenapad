@@ -1,0 +1,2 @@
+#COMPILER=g++
+#export C_INCLUDE_PATH=/usr/include/mpi:$C_INCLUDE_PATH

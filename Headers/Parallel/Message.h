@@ -2,26 +2,21 @@
 #define _PARALLEL_MESSAGE_H_
 
 #include "Definitions.h"
-
 #include "Transferable.h"
 
-namespace Parallel
-{
-	class Message : public Parallel::Transferable
-	{
-	public:
+namespace Parallel {
+class Message : public Parallel::Transferable {
+ public:
+  Message();
+  Message(Int message);
+  virtual ~Message();
 
-		Message();
-		Message(Int message);
-		virtual ~Message();
+  virtual void setMessage(Int message);
+  virtual Int getMessage() const;
 
-		virtual void setMessage(Int message);
-		virtual Int getMessage() const;
+ protected:
+  Int message;
+};
+}  // namespace Parallel
 
-	protected:
-
-		Int message;
-	};
-}
-
-#endif //#ifndef _PARALLEL_MESSGE_H_
+#endif  //#ifndef _PARALLEL_MESSGE_H_

@@ -6,43 +6,31 @@
 
 using namespace Parallel;
 
-Parallel::OMPThreadManager::OMPThreadManager(bool sharedParallelismEnabled) :
-	Parallel::ThreadManager::ThreadManager(sharedParallelismEnabled)
-{
+Parallel::OMPThreadManager::OMPThreadManager(bool sharedParallelismEnabled)
+    : Parallel::ThreadManager::ThreadManager(sharedParallelismEnabled) {}
 
+Parallel::OMPThreadManager::~OMPThreadManager() {}
+
+void Parallel::OMPThreadManager::setMaxThreads(Int maxThreads) {
+  if (this->isSharedParallelismEnabled()) {
+    omp_set_num_threads(maxThreads);
+  }
 }
 
-Parallel::OMPThreadManager::~OMPThreadManager()
-{
-
+Int Parallel::OMPThreadManager::getMaxThreads() const {
+  return this->isSharedParallelismEnabled() ? omp_get_max_threads() : 1;
 }
 
-void Parallel::OMPThreadManager::setMaxThreads(Int maxThreads)
-{
-	if (this->isSharedParallelismEnabled())
-	{
-		omp_set_num_threads(maxThreads);
-	}
+bool Parallel::OMPThreadManager::isInParallel() const {
+  return static_cast<bool>(omp_in_parallel());
 }
 
-Int Parallel::OMPThreadManager::getMaxThreads() const
-{
-	return this->isSharedParallelismEnabled() ? omp_get_max_threads() : 1;
+Int Parallel::OMPThreadManager::numThreads() const {
+  return omp_get_num_threads();
 }
 
-bool Parallel::OMPThreadManager::isInParallel() const
-{
-	return static_cast<bool>(omp_in_parallel());
+Int Parallel::OMPThreadManager::threadId() const {
+  return omp_get_thread_num();
 }
 
-Int Parallel::OMPThreadManager::numThreads() const
-{
-	return omp_get_num_threads();
-}
-
-Int Parallel::OMPThreadManager::threadId() const
-{
-	return omp_get_thread_num();
-}
-
-#endif //#if USE_OPENMP
+#endif  //#if USE_OPENMP

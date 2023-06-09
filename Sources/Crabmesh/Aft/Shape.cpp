@@ -1,84 +1,74 @@
 #include "../../../Headers/Crabmesh/Aft/Shape.h"
 
-//double Shape::tolerance = 1.e-8;
+// double Shape::tolerance = 1.e-8;
 
-//double Shape::getTolerance()
+// double Shape::getTolerance()
 //{
-//    return this->tolerance;
-//}
+//     return this->tolerance;
+// }
 
-Shape::Shape(long int id)
-{
-    setId(id);
-//    this->tolerance = 1.e-8;
-    //setTolerance(0.001);
-//#if USE_OPENGL
-//    setColor(1.0, 1.0, 1.0);
-//#endif //#if USE_OPENGL
+Shape::Shape(long int id) {
+  setId(id);
+  //    this->tolerance = 1.e-8;
+  // setTolerance(0.001);
+  //#if USE_OPENGL
+  //    setColor(1.0, 1.0, 1.0);
+  //#endif //#if USE_OPENGL
 }
 
-Shape::~Shape()
-{
+Shape::~Shape() {}
 
-}
+void Shape::setId(long int id) { this->id = id; }
 
-void Shape::setId(long int id)
-{
-    this->id = id;
-}
+long int Shape::getId() { return id; }
 
-long int Shape::getId()
-{
-    return id;
-}
-
-//void Shape::setTolerance(double tolerance)
+// void Shape::setTolerance(double tolerance)
 //{
-//    Shape::tolerance = tolerance;
-//}
+//     Shape::tolerance = tolerance;
+// }
 
 //#if USE_OPENGL
-//void Shape::setColor(double r, double g, double b)
+// void Shape::setColor(double r, double g, double b)
 //{
 //    setR(r);
 //    setG(g);
 //    setB(b);
 //}
 
-//void Shape::setR(double r)
+// void Shape::setR(double r)
 //{
-//    this->r = r;
-//}
+//     this->r = r;
+// }
 
-//void Shape::setG(double g)
+// void Shape::setG(double g)
 //{
-//    this->g = g;
-//}
+//     this->g = g;
+// }
 
-//void Shape::setB(double b)
+// void Shape::setB(double b)
 //{
-//    this->b = b;
-//}
+//     this->b = b;
+// }
 
-//double Shape::getR()
+// double Shape::getR()
 //{
-//    return r;
-//}
+//     return r;
+// }
 
-//double Shape::getG()
+// double Shape::getG()
 //{
-//    return g;
-//}
+//     return g;
+// }
 
-//double Shape::getB()
+// double Shape::getB()
 //{
-//    return b;
-//}
+//     return b;
+// }
 
-//void Shape::getColor(double *r, double *g, double *b)
+// void Shape::getColor(double *r, double *g, double *b)
 //{
-//    *r = this->r;
-//    *g = this->g;
-//    *b = this->b;
-//}
+//     *r = this->r;
+//     *g = this->g;
+//     *b = this->b;
+// }
 //#endif //#if USE_OPENGL

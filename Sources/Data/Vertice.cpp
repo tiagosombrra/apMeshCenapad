@@ -11,16 +11,12 @@ This source code is under GNU General Public License v3 */
 
 #include "../../Headers/Data/Vertice.h"
 
-Vertice::Vertice() {
+Vertice::Vertice() {}
 
-}
-
-Vertice::Vertice(double x, double y, double z) : Ponto ( x, y, z) {
-
-}
+Vertice::Vertice(double x, double y, double z) : Ponto(x, y, z) {}
 
 Vertice::Vertice(Ponto *p) {
-    this->x = p->x;
-    this->y = p->y;
-    this->z = p->z;
+  this->x = p->x;
+  this->y = p->y;
+  this->z = p->z;
 }

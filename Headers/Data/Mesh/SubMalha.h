@@ -14,34 +14,36 @@ This source code is under GNU General Public License v3 */
 
 #include <iostream>
 #include <vector>
-#include "../Noh.h"
-#include "../Elemento.h"
+
 #include "../Definitions.h"
+#include "../Elemento.h"
+#include "../Noh.h"
 using namespace std;
 
 class Noh;
 class Elemento;
 class Patch;
 
-class SubMalha
-{
-    Patch* patch;
-    vector <Noh*> nos;
-    vector <Elemento*> elementos;
+class SubMalha {
+  Patch* patch;
+  vector<Noh*> nos;
+  vector<Elemento*> elementos;
 
-public :
-    void setPatch ( Patch* p );
-    Patch* getPatch (  ) const ;
+ public:
+  void setPatch(Patch* p);
+  Patch* getPatch() const;
 
-    void insereNoh ( Noh* n );
-    unsigned int getNumDeNos (  ) const { return ( unsigned int ) nos.size(); }
-    Noh* getNoh ( const unsigned int i ); // retorna o i-ésimo nó
+  void insereNoh(Noh* n);
+  unsigned int getNumDeNos() const { return (unsigned int)nos.size(); }
+  Noh* getNoh(const unsigned int i);  // retorna o i-ésimo nó
 
-    void insereElemento (Elemento* elem);
-    unsigned int getNumDeElementos (  ) const { return ( unsigned int ) elementos.size(); }
-    Elemento* getElemento ( const unsigned int i ); // retorna o i-ésimo elemento
+  void insereElemento(Elemento* elem);
+  unsigned int getNumDeElementos() const {
+    return (unsigned int)elementos.size();
+  }
+  Elemento* getElemento(const unsigned int i);  // retorna o i-ésimo elemento
 
-    ~SubMalha (  );
+  ~SubMalha();
 };
 
 #endif

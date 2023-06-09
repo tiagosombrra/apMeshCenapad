@@ -13,31 +13,30 @@ This source code is under GNU General Public License v3 */
 #define CurvaturaDiscreta_h
 
 #include <cmath>
-#include <list>
 #include <cstdlib>
-#include "Curvatura.h"
+#include <list>
+
 #include "Adjacente.h"
+#include "Curvatura.h"
 
 using namespace std;
 
 class Elemento;
 
-class CurvaturaDiscreta : public Curvatura
-{
-    Noh p;
-    list <Elemento*> elementos; // lista dos elementos de 'm' incidentes em 'n'
-    double A; // área dos elementos incidentes em 'n'
-    double fator;	// assume M_PI ou 2 * M_PI
-    double sum_phi; // soma dos ângulos em 'n'
+class CurvaturaDiscreta : public Curvatura {
+  Noh p;
+  list<Elemento*> elementos;  // lista dos elementos de 'm' incidentes em 'n'
+  double A;                   // área dos elementos incidentes em 'n'
+  double fator;               // assume M_PI ou 2 * M_PI
+  double sum_phi;             // soma dos ângulos em 'n'
 
-    void ordenaAdjacencia ( const Noh& n );
+  void ordenaAdjacencia(const Noh& n);
 
-public :
-    virtual double media ( );
-    virtual double gauss ( );
+ public:
+  virtual double media();
+  virtual double gauss();
 
-    CurvaturaDiscreta ( const Noh& n );
+  CurvaturaDiscreta(const Noh& n);
 };
 
 #endif
-

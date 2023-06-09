@@ -14,69 +14,43 @@ This source code is under GNU General Public License v3 */
 using namespace std;
 
 Ponto::Ponto() {
-
-    this->id = -1;
-    this->x = 0;
-    this->y = 0;
-    this->z = 0;
-
+  this->id = -1;
+  this->x = 0;
+  this->y = 0;
+  this->z = 0;
 }
 
-Ponto::Ponto(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {
-
-}
+Ponto::Ponto(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 
 Ponto::Ponto(double _x, double _y, double _z, unsigned long i)
-    : id ( i ), x ( _x ), y ( _y ), z ( _z ) {
+    : id(i), x(_x), y(_y), z(_z) {}
 
+unsigned long Ponto::getId() const { return id; }
+
+void Ponto::setId(unsigned long value) { id = value; }
+
+bool Ponto::operator==(const Ponto& p) const {
+  if ((fabs(this->x - p.x) <= 0.000001) and
+      (fabs(this->y - p.y) <= 0.000001) and (fabs(this->z - p.z) <= 0.000001))
+    return true;
+
+  return false;
 }
 
-unsigned long Ponto::getId() const
-{
-    return id;
+bool Ponto::operator==(const Ponto* p) const {
+  if ((fabs(this->x - p->x) <= 0.000001) and
+      (fabs(this->y - p->y) <= 0.000001) and (fabs(this->z - p->z) <= 0.000001))
+    return true;
+
+  return false;
 }
 
-void Ponto::setId(unsigned long value)
-{
-    id = value;
-}
-
-bool Ponto::operator== ( const Ponto& p )const
-{
-    if (	( fabs( this->x - p.x ) <= 0.000001 ) and
-                ( fabs( this->y - p.y ) <= 0.000001 ) and
-            ( fabs( this->z - p.z ) <= 0.000001 )
-            ) return true;
-
-    return false;
-}
-
-bool Ponto::operator==(const Ponto *p) const
-{
-    if (	( fabs( this->x - p->x ) <= 0.000001 ) and
-        ( fabs( this->y - p->y ) <= 0.000001 ) and
-        ( fabs( this->z - p->z ) <= 0.000001 )
-        ) return true;
-
-    return false;
-}
-
-
-double Ponto::distanciaPara ( const Ponto& p ) const
-{ 
-    return (
-                sqrt(
-                    pow( ( p.x - this->x ), 2.0) +
-                    pow( ( p.y - this->y ), 2.0) +
-                    pow( ( p.z - this->z ), 2.0)
-                    )
-                );
+double Ponto::distanciaPara(const Ponto& p) const {
+  return (sqrt(pow((p.x - this->x), 2.0) + pow((p.y - this->y), 2.0) +
+               pow((p.z - this->z), 2.0)));
 }
 
 void Ponto::mostraPonto() {
-    cout << "Ponto " << this->id << " = ( "
-         << this->x << ", "
-         << this->y << ", "
-         << this->z << ")" << endl;
+  cout << "Ponto " << this->id << " = ( " << this->x << ", " << this->y << ", "
+       << this->z << ")" << endl;
 }
-

@@ -12,8 +12,6 @@ This source code is under GNU General Public License v3 */
 #ifndef Adaptador_h
 #define Adaptador_h
 
-class Adaptador
-{
-};
+class Adaptador {};
 
 #endif

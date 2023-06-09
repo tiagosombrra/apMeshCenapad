@@ -14,25 +14,24 @@ This source code is under GNU General Public License v3 */
 
 #include <cmath>
 
-#include "../Data/Modelo.h"
 #include "../Data/Mesh/SubMalha.h"
+#include "../Data/Modelo.h"
 
 extern double TOLERANCIA;
-extern double EPSYLON; // define a qualidade mínima da malha
+extern double EPSYLON;  // define a qualidade mínima da malha
 
-class Gerador
-{
-protected :
-    unsigned int passo;
+class Gerador {
+ protected:
+  unsigned int passo;
 
-    virtual SubMalha* malhaInicial ( );
-    virtual double erroGlobal ( );
+  virtual SubMalha* malhaInicial();
+  virtual double erroGlobal();
 
-public :
-    double erro; // erro global da malha
+ public:
+  double erro;  // erro global da malha
 
-    Gerador (  );
-    //Gerador ( Modelo& modelo );
+  Gerador();
+  // Gerador ( Modelo& modelo );
 };
 
 #endif

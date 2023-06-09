@@ -1,35 +1,31 @@
 #ifndef READERPATCHES_H
 #define READERPATCHES_H
 
+#include <fstream>
 #include <iostream>
 #include <list>
-#include <fstream>
 #include <sstream>
-#include "../Data/Patch/BezierPatch.h"
-#include "../Data/Ponto.h"
-#include "../Data/Patch/HermitePatch.h"
-#include "../Data/Modelo.h"
 
+#include "../Data/Modelo.h"
+#include "../Data/Patch/BezierPatch.h"
+#include "../Data/Patch/HermitePatch.h"
+#include "../Data/Ponto.h"
 
 extern std::string entrada;
 
-class ReaderPatches
-{
-public:
+class ReaderPatches {
+ public:
+  std::list<BezierPatch *> patches;
+  std::list<HermitePatch *> patchesHermite;
+  BezierPatch *patch;
+  HermitePatch *patchHermite;
 
-    std::list<BezierPatch*> patches;
-    std::list<HermitePatch*> patchesHermite;
-    BezierPatch *patch;
-    HermitePatch *patchHermite;
+  ReaderPatches();
 
-    ReaderPatches();
+  std::list<BezierPatch *> loaderBezierPatchFile(string fileName);
+  Ponto getPointVectorControlPoints(std::vector<Ponto>, unsigned long);
 
-    std::list<BezierPatch *> loaderBezierPatchFile(string fileName);
-    Ponto getPointVectorControlPoints(std::vector<Ponto> , unsigned long );
-
-    Geometria* readerPatches(Geometria *geo, string fileName);
-
-
+  Geometria *readerPatches(Geometria *geo, string fileName);
 };
 
-#endif // READERPATCHES_H
+#endif  // READERPATCHES_H

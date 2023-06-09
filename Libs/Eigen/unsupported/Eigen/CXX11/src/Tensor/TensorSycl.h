@@ -28,24 +28,26 @@ struct MakeLocalPointer {
   typedef typename cl::sycl::local_ptr<T>::pointer_t Type;
 };
 
-
 namespace Eigen {
 namespace TensorSycl {
 namespace internal {
 
-/// This struct is used for special expression nodes with no operations (for example assign and selectOP).
-  struct NoOP;
+/// This struct is used for special expression nodes with no operations (for
+/// example assign and selectOP).
+struct NoOP;
 
-template<bool IsConst, typename T> struct GetType{
+template <bool IsConst, typename T>
+struct GetType {
   typedef const T Type;
 };
-template<typename T> struct GetType<false, T>{
+template <typename T>
+struct GetType<false, T> {
   typedef T Type;
 };
 
-}
-}
-}
+}  // namespace internal
+}  // namespace TensorSycl
+}  // namespace Eigen
 
 // tuple construction
 #include "TensorSyclTuple.h"

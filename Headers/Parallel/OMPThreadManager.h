@@ -7,26 +7,23 @@
 
 #include "ThreadManager.h"
 
-namespace Parallel
-{
-	class OMPThreadManager : public Parallel::ThreadManager
-	{
-	public:
+namespace Parallel {
+class OMPThreadManager : public Parallel::ThreadManager {
+ public:
+  OMPThreadManager(bool sharedParallelismEnabled = true);
+  virtual ~OMPThreadManager();
 
-		OMPThreadManager(bool sharedParallelismEnabled = true);
-		virtual ~OMPThreadManager();
+  virtual void setMaxThreads(Int maxThreads);
+  virtual Int getMaxThreads() const;
 
-		virtual void setMaxThreads(Int maxThreads);
-		virtual Int getMaxThreads() const;
+  virtual bool isInParallel() const;
 
-		virtual bool isInParallel() const;
+  virtual Int numThreads() const;
 
-		virtual Int numThreads() const;
+  virtual Int threadId() const;
+};
+}  // namespace Parallel
 
-		virtual Int threadId() const;
-	};
-}
+#endif  //#if USE_OPENMP
 
-#endif //#if USE_OPENMP
-
-#endif //#ifndef _PARALLEL_OMP_THREAD_MANAGER_H_
+#endif  //#ifndef _PARALLEL_OMP_THREAD_MANAGER_H_

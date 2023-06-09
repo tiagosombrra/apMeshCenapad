@@ -1,92 +1,95 @@
-PROGRAMA = apMesh
+# Nome do programa
+PROGRAM = ap_mesh
 
-FONTES = Sources/Data/Definitions.cpp \
-Sources/Estimate/ChargeEstimateProcess.cpp \
-Sources/IO/PatchBezierReader.cpp \
-Sources/IO/WriteOBJFile.cpp \
-Sources/Adapter/Adaptador.cpp \
-Sources/Adapter/AdaptadorPorCurvatura.cpp \
-Sources/Crabmesh/Aft/AdvancingFront.cpp \
-Sources/Crabmesh/Aft/Boundary.cpp \
-Sources/Crabmesh/Aft/Quadtree.cpp \
-Sources/Crabmesh/Aft/QuadtreeCell.cpp \
-Sources/Crabmesh/Aft/Shape.cpp \
-Sources/Crabmesh/Numerical/BisectionEquationRoot.cpp \
-Sources/Crabmesh/Numerical/Function.cpp \
-Sources/Crabmesh/Performer/IdManager.cpp \
-Sources/Crabmesh/Performer/RangedIdManager.cpp \
-Sources/Curvature/Adjacente.cpp \
-Sources/Curvature/Curvatura.cpp \
-Sources/Curvature/CurvaturaAnalitica.cpp \
-Sources/Curvature/CurvaturaDiscreta.cpp \
-Sources/Data/Curve/CurvParamBezier.cpp \
-Sources/Data/Curve/CurvParamHermite.cpp \
-Sources/Data/Curve/Curva.cpp \
-Sources/Data/Curve/CurvaParametrica.cpp \
-Sources/Data/Edge.cpp \
-Sources/Data/Elemento.cpp \
-Sources/Data/Face.cpp \
-Sources/Data/Geometria.cpp \
-Sources/Data/Mesh/Malha.cpp \
-Sources/Data/Mesh/SubMalha.cpp \
-Sources/Data/Modelo.cpp \
-Sources/Data/Noh.cpp \
-Sources/Data/Patch/BezierPatch.cpp \
-Sources/Data/Patch/CoonsPatch.cpp \
-Sources/Data/Patch/HermitePatch.cpp \
-Sources/Data/Patch/Patch.cpp \
-Sources/Data/Ponto.cpp \
-Sources/Data/Tree/BinTree.cpp \
-Sources/Data/Triangulo.cpp \
-Sources/Data/Vertex.cpp \
-Sources/Data/Vertice.cpp \
-Sources/Data/Vetor.cpp \
-Sources/Generator/Gerador.cpp \
-Sources/Generator/GeradorAdaptativo.cpp \
-Sources/Generator/GeradorAdaptativoPorCurvatura.cpp \
-Sources/IO/Arquivo.cpp \
-Sources/IO/Modelos3d.cpp \
-Sources/IO/ReaderPatches.cpp \
-Sources/Parallel/ApMeshCommunicator.cpp \
-Sources/Parallel/Communicator.cpp \
-Sources/Parallel/MPICommunicator.cpp \
-Sources/Parallel/MPIMessage.cpp \
-Sources/Parallel/Message.cpp \
-Sources/Parallel/NoCommunicator.cpp \
-Sources/Parallel/NoThreadManager.cpp \
-Sources/Parallel/OMPThreadManager.cpp \
-Sources/Parallel/ParallelMeshGenerator.cpp \
-Sources/Parallel/TMCommunicator.cpp \
-Sources/Parallel/ThreadManager.cpp \
-Sources/Parallel/Transferable.cpp \
-Sources/Timer/Timer.cpp \
-Sources/main.cpp
+# Diretórios de código-fonte
+SRC_DIRS := Sources
 
-OBJETOS = $(FONTES:.cpp=.o)
+# Obtenha todas as fontes em SRC_DIRS
+SOURCES := $(shell find $(SRC_DIRS) -name "*.cpp")
 
+# Diretório de build
+BUILD_DIR := build_make
+
+# Subdiretórios de build
+SUB_DIRS := $(shell find $(SRC_DIRS) -type d)
+BUILD_SUB_DIRS := $(patsubst $(SRC_DIRS)%,$(BUILD_DIR)%,$(SUB_DIRS))
+# BUILD_SUB_DIRS := $(foreach DIR,$(SUB_DIRS),$(patsubst $(SRC_DIRS)%,$(BUILD_DIR)%,$(DIR)))
+
+# Objetos a serem criados a partir de cada fonte
+OBJECTS := $(patsubst $(SRC_DIRS)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
+
+# Compiladores
 CC            = gcc
 CXX           = g++
 MPICC         = mpicc
-MPICXX        = mpic++
+MPICXX        = mpicxx
+# Define o compilador padrão como MPICXX, se disponível
+COMPILER := $(shell command -v $(MPICXX) 2> /dev/null)
+ifeq ($(COMPILER),)
+    COMPILER := $(CXX)
+    $(warning mpicxx não está disponível. Usando g++ como compilador padrão.)
+endif
 
-INCPATH = -IHeaders/Adapter -IHeaders/Crabmesh/Aft -IHeaders/Crabmesh/Numerical -IHeaders/Curvature -IHeaders/Data -IHeaders/Data/Curve -IHeaders/Data/Mesh -IHeaders/Data/Patch -IHeaders/Data/Tree -IHeaders/Estimate -IHeaders/Generator -IHeaders/IO -IHeaders/Parallel -IHeaders/Timer
+# Variáveis de caminho de inclusão e biblioteca
+DIR_ROOTS := .
+DIRS := $(shell find $(DIR_ROOTS) -type d \( -name include -o -name src \))
+INC_PATH := $(addprefix -I, $(addsuffix /include, $(DIRS)))
+LIB_PATH := $(addprefix -L, $(addsuffix /src, $(DIRS)))
 
-LIBPATH = -LSources/Adapter -LSources/Crabmesh/Aft -LSources/Crabmesh/Numerical -LSources/Curvature -LSources/Data -LSources/Data/Curve -LSources/Data/Mesh -LSources/Data/Patch -LSources/Data/Tree -LSources/Estimate -LSources/Generator -LSources/IO -LSources/Parallel -LSources/Timer
-
-CXXFLAGS_EXTRA = -O3 -W -Wall
+# Variáveis de opções de compilação
+CXXFLAGS_EXTRA = -O3 -DNDEBUG -march=native -W -Wall -ftree-vectorize -flto -fno-strict-aliasing -Wno-cast-function-type
 CXXFLAGS      = -std=c++17 $(CXXFLAGS_EXTRA)
-CXXFLAGS_OMP  = -fopenmp  $(CXXFLAGS) 
+CXXFLAGS_OMP  = -fopenmp $(CXXFLAGS)
 
-$(PROGRAMA): $(OBJETOS)
-	@echo "gerando o executavel..."
-	$(MPICXX) $(INCPATH) $(CXXFLAGS_OMP) $(LIBPATH) $(OBJETOS) -o $@
+# Variáveis de limpeza
+GARBAGE_PATTERNS := *.o
+GARBAGE := $(foreach DIR,$(BUILD_DIR) $(BUILD_SUB_DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
 
-.cpp.o:
-	@echo "gerando os .o..."
-	$(MPICXX) $(INCPATH) -c $(CXXFLAGS_OMP) $< -o $@
+# Regra principal para criar o programa
+$(BUILD_DIR)/$(PROGRAM): $(OBJECTS)
+	@echo "Criando o executável..."
+	$(COMPILER) $(INC_PATH) $(CXXFLAGS_OMP) $(LIB_PATH) $^ -o $@
 
+# Regra de construção de objeto
+$(BUILD_DIR)/%.o: $(SRC_DIRS)/%.cpp | $(BUILD_DIR) $(BUILD_SUB_DIRS)
+	@echo "Criando o objeto $@..."
+	$(COMPILER) $(INC_PATH) -c $(CXXFLAGS_OMP) $< -o $@
+
+# Regra para criar o diretório de build e subdiretórios
+$(BUILD_DIR) $(BUILD_SUB_DIRS):
+	@echo "Criando diretórios de build, se necessário..."
+	if [ ! -d $@ ]; then mkdir -p $@; fi
+
+# Regra de limpeza
 clean:
-	rm -rfv *.o Sources/*.o Sources/Adapter/*.o Sources/Crabmesh/Aft/*.o  Sources/Crabmesh/Numerical/*.o Sources/Crabmesh/Performer/*.o Sources/Curvature/*.o Sources/Data/*.o Sources/Data/Curve/*.o Sources/Data/Mesh/*.o Sources/Data/Patch/*.o Sources/Data/Tree/*.o Sources/Estimate/*.o Sources/Generator/*.o Sources/IO/*.o Sources/Parallel/*.o Sources/Timer/*.o $(PROGRAMA)
+	rm -rfv $(GARBAGE) $(BUILD_DIR)/$(PROGRAM)
 
-exec: 
-	./$(PROGRAMA)
+# Regra para executar o programa
+exec:
+	./$(BUILD_DIR)/$(PROGRAM)
+
+# Carregar opções adicionais do arquivo .makefileopts, se existir
+-include .makefileopts
+
+# make COMPILER=g++
+
+# Regras de depuração
+print-%:
+	@echo "$*=$($*)"
+
+# Mostra todas as variáveis de ambiente
+show-environment:
+	env | sort
+
+# Mostra todos os alvos disponíveis
+show-targets:
+	@echo "Alvos disponíveis:"
+	@echo "  make                - Compila e constrói o programa"
+	@echo "  make clean          - Remove todos os arquivos gerados pelo make"
+	@echo "  make exec           - Executa o programa"
+	@echo "  make COMPILER=<CXX> - Especifica o compilador a ser usado (padrão: mpicxx)"
+	@echo "  make print-<var>    - Imprime o valor de uma variável"
+	@echo "  make show-environment - Imprime todas as variáveis de ambiente usadas pelo make"
+	@echo "  make show-targets   - Imprime a lista de alvos disponíveis"
+
+.PHONY: clean exec show-environment show-targets

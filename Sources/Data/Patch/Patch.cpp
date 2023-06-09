@@ -11,43 +11,19 @@ This source code is under GNU General Public License v3 */
 
 #include "../../../Headers/Data/Patch/Patch.h"
 
-unsigned long Patch::getId() const
-{
-    return id;
-}
+unsigned long Patch::getId() const { return id; }
 
-void Patch::setId(unsigned long value)
-{
-    id = value;
-}
+void Patch::setId(unsigned long value) { id = value; }
 
-void Patch::setMalha ( SubMalha* m )
-{
-    this->malha = m;
-}
+void Patch::setMalha(SubMalha* m) { this->malha = m; }
 
+SubMalha* Patch::getMalha() const { return this->malha; }
 
-SubMalha* Patch::getMalha (  ) const
-{
-    return this->malha;
-}
+Patch::Patch() { this->malha = NULL; }
 
+Patch::Patch(Patch*) { this->malha = NULL; }
 
-Patch::Patch ( )
-{
-    this->malha = NULL;
-}
-
-
-Patch::Patch ( Patch * )
-{
-    this->malha = NULL;
-}
-
-
-Patch::~Patch ( )
-{
-    // não delete o que não for alocado com new!
-    if ( this->malha != NULL )
-        delete this->malha;
+Patch::~Patch() {
+  // não delete o que não for alocado com new!
+  if (this->malha != NULL) delete this->malha;
 }

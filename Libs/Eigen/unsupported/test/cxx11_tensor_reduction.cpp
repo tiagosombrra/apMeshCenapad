@@ -7,10 +7,11 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "main.h"
+#include <Eigen/CXX11/Tensor>
 #include <limits>
 #include <numeric>
-#include <Eigen/CXX11/Tensor>
+
+#include "main.h"
 
 using Eigen::Tensor;
 
@@ -239,7 +240,6 @@ static void test_simple_reductions() {
   }
 }
 
-
 template <int DataLayout>
 static void test_reductions_in_expr() {
   Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
@@ -264,7 +264,6 @@ static void test_reductions_in_expr() {
     }
   }
 }
-
 
 template <int DataLayout>
 static void test_full_reductions() {
@@ -368,7 +367,7 @@ static void test_static_dims() {
   Tensor<float, 2, DataLayout> out(72, 97);
   in.setRandom();
 
-#if !EIGEN_HAS_CONSTEXPR 
+#if !EIGEN_HAS_CONSTEXPR
   array<int, 2> reduction_axis;
   reduction_axis[0] = 1;
   reduction_axis[1] = 3;
@@ -435,7 +434,7 @@ static void test_innermost_first_dims() {
   reduction_axis[1] = 3;
 #else
   // This triggers the use of packets for RowMajor.
-  Eigen::IndexList<Eigen::type2index<2>, Eigen::type2index<3>> reduction_axis;
+  Eigen::IndexList<Eigen::type2index<2>, Eigen::type2index<3> > reduction_axis;
 #endif
 
   out = in.maximum(reduction_axis);
@@ -466,7 +465,7 @@ static void test_reduce_middle_dims() {
   reduction_axis[1] = 2;
 #else
   // This triggers the use of packets for RowMajor.
-  Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<2>> reduction_axis;
+  Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<2> > reduction_axis;
 #endif
 
   out = in.maximum(reduction_axis);

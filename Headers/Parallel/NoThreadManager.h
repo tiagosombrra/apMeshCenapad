@@ -4,29 +4,25 @@
 #include "Definitions.h"
 #include "ThreadManager.h"
 
-namespace Parallel
-{
-	class NoThreadManager : public ThreadManager
-	{
-	public:
+namespace Parallel {
+class NoThreadManager : public ThreadManager {
+ public:
+  NoThreadManager(bool sharedParallelismEnabled = true);
+  virtual ~NoThreadManager();
 
-		NoThreadManager(bool sharedParallelismEnabled = true);
-		virtual ~NoThreadManager();
+  virtual bool isSharedParallelismEnabled() const;
 
-		virtual bool isSharedParallelismEnabled() const;
+  virtual void setMaxThreads(Int maxThreads);
+  virtual Int getMaxThreads() const;
 
-		virtual void setMaxThreads(Int maxThreads);
-		virtual Int getMaxThreads() const;
+  virtual bool isInParallel() const;
 
-		virtual bool isInParallel() const;
+  virtual Int numThreads() const;
 
-		virtual Int numThreads() const;
+  virtual Int threadId() const;
 
-		virtual Int threadId() const;
+ protected:
+};
+}  // namespace Parallel
 
-	protected:
-
-	};
-}
-
-#endif //#ifndef _PARALLEL_NO_THREAD_MANAGER_H_
+#endif  //#ifndef _PARALLEL_NO_THREAD_MANAGER_H_

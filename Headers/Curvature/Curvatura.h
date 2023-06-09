@@ -14,10 +14,9 @@ This source code is under GNU General Public License v3 */
 
 #include "../Data/Noh.h"
 
-struct Curvatura
-{
-    virtual double media (  )=0;
-    virtual double gauss (  )=0;
+struct Curvatura {
+  virtual double media() = 0;
+  virtual double gauss() = 0;
 };
 
 #endif

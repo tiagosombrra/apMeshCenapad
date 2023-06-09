@@ -11,23 +11,15 @@ This source code is under GNU General Public License v3 */
 
 #include "../../Headers/Generator/GeradorAdaptativo.h"
 
-SubMalha* GeradorAdaptativo::malhaInicial ( )
-{
-    SubMalha* sub = 0;
-    return sub;
+SubMalha* GeradorAdaptativo::malhaInicial() {
+  SubMalha* sub = 0;
+  return sub;
 }
 
-double GeradorAdaptativo::erroGlobal ( )
-{
-    return 1;
-}
+double GeradorAdaptativo::erroGlobal() { return 1; }
 
+GeradorAdaptativo::GeradorAdaptativo() {}
 
-GeradorAdaptativo::GeradorAdaptativo (  ){
-
-}
-
-
-//GeradorAdaptativo::GeradorAdaptativo ( Modelo& modelo ){
+// GeradorAdaptativo::GeradorAdaptativo ( Modelo& modelo ){
 
 //}

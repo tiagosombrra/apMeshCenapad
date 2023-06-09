@@ -14,25 +14,25 @@ This source code is under GNU General Public License v3 */
 
 #include <iostream>
 #include <list>
-#include "Ponto.h"
-#include "Geometria.h"
+
 #include "../Data/Mesh/Malha.h"
+#include "Geometria.h"
+#include "Ponto.h"
 using namespace std;
 
-class Modelo
-{
-    Geometria* geometria;
-    vector <Malha*> malhas;
+class Modelo {
+  Geometria* geometria;
+  vector<Malha*> malhas;
 
-public :
-    void setGeometria ( Geometria* g );
-    Geometria* getGeometria ( );
-    void insereMalha ( Malha* m );
-    unsigned int getNumDeMalhas (  ) const;
-    Malha* getMalha ( const unsigned int i ); // retorna a i-ésima malha
-    Modelo  ( );
-    Modelo ( Geometria* );
-    ~Modelo ( );
+ public:
+  void setGeometria(Geometria* g);
+  Geometria* getGeometria();
+  void insereMalha(Malha* m);
+  unsigned int getNumDeMalhas() const;
+  Malha* getMalha(const unsigned int i);  // retorna a i-ésima malha
+  Modelo();
+  Modelo(Geometria*);
+  ~Modelo();
 };
 
 #endif

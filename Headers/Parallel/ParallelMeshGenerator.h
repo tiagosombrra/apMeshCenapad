@@ -6,18 +6,17 @@
 
 using namespace Data;
 
-class ParallelMeshGenerator
-{
-public:
-    ParallelMeshGenerator();
+class ParallelMeshGenerator {
+ public:
+  ParallelMeshGenerator();
 
-    Performer::IdManager *makeIdManager(const Parallel::TMCommunicator *comm, Int id) const;    
+  Performer::IdManager *makeIdManager(const Parallel::TMCommunicator *comm,
+                                      Int id) const;
 
-protected:
-    Performer::IdManager *idManager;
-    mutable ULInt idoffset;
-    ULInt idrange;
-
+ protected:
+  Performer::IdManager *idManager;
+  mutable ULInt idoffset;
+  ULInt idrange;
 };
 
-#endif // PARALLELMESHGENERATOR_H
+#endif  // PARALLELMESHGENERATOR_H

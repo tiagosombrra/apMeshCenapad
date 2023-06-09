@@ -14,10 +14,9 @@ This source code is under GNU General Public License v3 */
 
 #include "Ponto.h"
 
-struct Vertice : public Ponto
-{
-    Vertice ();
-    Vertice ( double x, double y, double z);
-    Vertice ( Ponto* p );
+struct Vertice : public Ponto {
+  Vertice();
+  Vertice(double x, double y, double z);
+  Vertice(Ponto* p);
 };
 #endif

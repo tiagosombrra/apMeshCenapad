@@ -10,7 +10,6 @@
 #ifndef EIGEN_CXX11_THREADPOOL_NONBLOCKING_THREAD_POOL_H
 #define EIGEN_CXX11_THREADPOOL_NONBLOCKING_THREAD_POOL_H
 
-
 namespace Eigen {
 
 template <typename Environment>
@@ -97,9 +96,7 @@ class NonBlockingThreadPoolTempl : public Eigen::ThreadPoolInterface {
       env_.ExecuteTask(t);  // Push failed, execute directly.
   }
 
-  int NumThreads() const final {
-    return static_cast<int>(threads_.size());
-  }
+  int NumThreads() const final { return static_cast<int>(threads_.size()); }
 
   int CurrentThreadId() const final {
     const PerThread* pt =
@@ -115,8 +112,9 @@ class NonBlockingThreadPoolTempl : public Eigen::ThreadPoolInterface {
   typedef typename Environment::EnvThread Thread;
 
   struct PerThread {
-    constexpr PerThread() : pool(NULL), rand(0), thread_id(-1) { }
-    NonBlockingThreadPoolTempl* pool;  // Parent pool, or null for normal threads.
+    constexpr PerThread() : pool(NULL), rand(0), thread_id(-1) {}
+    NonBlockingThreadPoolTempl*
+        pool;       // Parent pool, or null for normal threads.
     uint64_t rand;  // Random generator state.
     int thread_id;  // Worker thread index in pool.
   };
@@ -263,7 +261,8 @@ class NonBlockingThreadPoolTempl : public Eigen::ThreadPoolInterface {
     // Update the internal state
     *state = current * 6364136223846793005ULL + 0xda3e39cb94b95bdbULL;
     // Generate the random output (using the PCG-XSH-RS scheme)
-    return static_cast<unsigned>((current ^ (current >> 22)) >> (22 + (current >> 61)));
+    return static_cast<unsigned>((current ^ (current >> 22)) >>
+                                 (22 + (current >> 61)));
   }
 };
 

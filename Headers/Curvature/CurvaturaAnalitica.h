@@ -13,34 +13,30 @@ This source code is under GNU General Public License v3 */
 #define CurvaturaAnalitica_h
 
 #include <cmath>
-
 #include <tuple>
 
+#include "../Data/Patch/CoonsPatch.h"
 #include "../Data/Vertice.h"
 #include "../Data/Vetor.h"
-#include "../Data/Patch/CoonsPatch.h"
 #include "Curvatura.h"
 
-class CurvaturaAnalitica : public Curvatura
-{
-    Vetor Qu;
-    Vetor Qv;
-    Vetor Quu;
-    Vetor Quv;
-    Vetor Qvv;
-    Vetor prod;
+class CurvaturaAnalitica : public Curvatura {
+  Vetor Qu;
+  Vetor Qv;
+  Vetor Quu;
+  Vetor Quv;
+  Vetor Qvv;
+  Vetor prod;
 
-    double A;
-    double B;
-    double C;
+  double A;
+  double B;
+  double C;
 
-public :
-
-    virtual double media (  );
-    virtual double gauss (  );
-    virtual double curvaturaCurva (  );
-    CurvaturaAnalitica ( const Ponto& v, CoonsPatch& p );
+ public:
+  virtual double media();
+  virtual double gauss();
+  virtual double curvaturaCurva();
+  CurvaturaAnalitica(const Ponto& v, CoonsPatch& p);
 };
 
 #endif
-

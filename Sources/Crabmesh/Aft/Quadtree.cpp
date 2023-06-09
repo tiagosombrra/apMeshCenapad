@@ -1,545 +1,431 @@
 #include "../../../Headers/Crabmesh/Aft/Quadtree.h"
 
+void escreve(Quadtree *q, int i) {
+  static int passo = 0;
 
-void escreve(Quadtree *q, int i)
-{
-    static int passo = 0;
+  string s;
 
-    string s;
+  if (i == 1) {
+    s = "borda";
+    passo++;
+  } else if (i == 2)
+    s = "interior";
+  else if (i == 3)
+    s = "restrita";
 
-    if (i == 1) { s = "borda"; passo++; }
-    else if (i == 2) s = "interior";
-    else if (i == 3) s = "restrita";
+  stringstream nome;
+  nome << passo;
+  nome << "quadtree_";
+  nome << s;
+  nome << ".pos";
 
-    stringstream nome;
-    nome << passo;
-    nome << "quadtree_";
-    nome << s;
-    nome << ".pos";
+  ofstream arq(nome.str().c_str());
 
-    ofstream arq(nome.str().c_str());
+  arq << "%HEADER" << endl
+      << "Arquivo da quadtree gerado pelo gerador de malhas de superficie do "
+         "Daniel Siqueira"
+      << endl
+      << endl;
 
-    arq << "%HEADER" << endl
-        << "Arquivo da quadtree gerado pelo gerador de malhas de superficie do Daniel Siqueira" << endl << endl;
+  arq << "%HEADER.VERSION" << endl
+      << "0-005 - Oct/93" << endl
+      << endl
+      << "%HEADER.ANALYSIS" << endl
+      << "\'shell\'" << endl
+      << endl;
 
-    arq << "%HEADER.VERSION" << endl
-        << "0-005 - Oct/93" << endl << endl
-        << "%HEADER.ANALYSIS" << endl
-        << "\'shell\'" << endl << endl;
+  QuadtreeCellList folhas = q->getLeaves();
 
-    QuadtreeCellList folhas = q->getLeaves();
+  list<Vertex> vertices;
 
-    list<Vertex> vertices;
+  int id = 0;
 
-    int id = 0;
+  for (QuadtreeCellList::iterator iter = folhas.begin(); iter != folhas.end();
+       iter++) {
+    Vertex *min = (*iter)->getMin();
+    Vertex *max = (*iter)->getMax();
 
-    for (QuadtreeCellList::iterator iter = folhas.begin();
-         iter != folhas.end(); iter++)
-    {
-        Vertex *min = (*iter)->getMin();
-        Vertex *max = (*iter)->getMax();
+    Vertex v1(min->getX(), min->getY(), ++id);
+    Vertex v2(max->getX(), min->getY(), ++id);
+    Vertex v3(max->getX(), max->getY(), ++id);
+    Vertex v4(min->getX(), max->getY(), ++id);
 
-        Vertex v1(min->getX(), min->getY(), ++id);
-        Vertex v2(max->getX(), min->getY(), ++id);
-        Vertex v3(max->getX(), max->getY(), ++id);
-        Vertex v4(min->getX(), max->getY(), ++id);
+    vertices.push_back(v1);
+    vertices.push_back(v2);
+    vertices.push_back(v3);
+    vertices.push_back(v4);
+  }
 
-        vertices.push_back(v1);
-        vertices.push_back(v2);
-        vertices.push_back(v3);
-        vertices.push_back(v4);
-    }
+  arq << "%NODE" << endl << vertices.size() << endl << endl;
 
-    arq << "%NODE" << endl
-        << vertices.size() << endl << endl;
+  arq << "%NODE.COORD" << endl << vertices.size() << endl;
 
-    arq << "%NODE.COORD" << endl
-        << vertices.size() << endl;
+  for (list<Vertex>::iterator iter = vertices.begin(); iter != vertices.end();
+       iter++) {
+    Vertex n = (*iter);
 
-    for (list<Vertex>::iterator iter = vertices.begin();
-         iter != vertices.end(); iter++)
-    {
-        Vertex n = (*iter);
+    arq << n.getId() << " " << n.getX() << " " << n.getY() << " "
+        << "0" << endl;
+  }
 
-        arq << n.getId() << " "
-            << n.getX() << " "
-            << n.getY() << " "
-            << "0" << endl;
-    }
+  arq << endl;
 
-    arq << endl;
+  arq << "%MATERIAL" << endl
+      << "1" << endl
+      << endl
+      << "%MATERIAL.LABEL" << endl
+      << "1" << endl
+      << "1\t\'m1\'" << endl
+      << endl
+      << "%MATERIAL.ISOTROPIC" << endl
+      << "1" << endl
+      << "1\t1000.0\t0.0" << endl
+      << endl
+      << "%THICKNESS" << endl
+      << "1" << endl
+      << "1\t1.0" << endl
+      << endl
+      << "%INTEGRATION.ORDER" << endl
+      << "1" << endl
+      << "1\t3\t1\t1\t3\t1\t1" << endl
+      << endl;
 
-    arq << "%MATERIAL" << endl
-        << "1" << endl << endl
-        << "%MATERIAL.LABEL" << endl
-        << "1" << endl
-        << "1\t\'m1\'" << endl << endl
-        << "%MATERIAL.ISOTROPIC" << endl
-        << "1" << endl
-        << "1\t1000.0\t0.0" << endl << endl
-        << "%THICKNESS" << endl
-        << "1" << endl
-        << "1\t1.0" << endl << endl
-        << "%INTEGRATION.ORDER" << endl
-        << "1" << endl
-        << "1\t3\t1\t1\t3\t1\t1" << endl << endl;
+  arq << "%ELEMENT" << endl << 2 * folhas.size() << endl << endl;
 
-    arq << "%ELEMENT" << endl
-        << 2*folhas.size() << endl << endl;
+  arq << "%ELEMENT.T3" << endl << 2 * folhas.size() << endl;
 
-    arq << "%ELEMENT.T3" << endl
-        << 2*folhas.size() << endl;
+  int idv = 1;
+  int idq = 0;
 
-    int idv = 1;
-    int idq = 0;
+  for (QuadtreeCellList::iterator iter = folhas.begin(); iter != folhas.end();
+       iter++) {
+    /*arq << ++idq << " "
+             << "1 1 1 "
+             << ++idv << " "
+             << ++idv << " "
+             << ++idv << " "
+             << ++idv << endl;*/
 
-    for (QuadtreeCellList::iterator iter = folhas.begin();
-         iter != folhas.end(); iter++)
-    {
-        /*arq << ++idq << " "
-                 << "1 1 1 "
-                 << ++idv << " "
-                 << ++idv << " "
-                 << ++idv << " "
-                 << ++idv << endl;*/
+    arq << ++idq << " "
+        << "1 1 1 " << idv << " " << idv + 1 << " " << idv + 2 << endl;
 
-        arq << ++idq << " "
-            << "1 1 1 "
-            << idv << " "
-            << idv+1 << " "
-            << idv+2 << endl;
+    arq << ++idq << " "
+        << "1 1 1 " << idv << " " << idv + 2 << " " << idv + 3 << endl;
 
-        arq << ++idq << " "
-            << "1 1 1 "
-            << idv << " "
-            << idv+2 << " "
-            << idv+3 << endl;
+    idv += 4;
+  }
 
-        idv += 4;
-    }
+  arq << endl;
+  arq << "%END";
 
-    arq << endl;
-    arq << "%END";
+  arq.flush();
 
-    arq.flush();
+  arq.close();
 
-    arq.close();
-
-    cout << "escreveu o arquivo para a quadtree " << s << " para o passo " << passo << endl;
+  cout << "escreveu o arquivo para a quadtree " << s << " para o passo "
+       << passo << endl;
 }
 
-Quadtree::Quadtree(
-        Boundary *boundary,
-        double factor) : Shape()
-{
-    setBoundary(boundary);
-    setFactor(factor);
-    setRoot(NULL);
+Quadtree::Quadtree(Boundary *boundary, double factor) : Shape() {
+  setBoundary(boundary);
+  setFactor(factor);
+  setRoot(NULL);
 
-//#if USE_OPENGL
-//    setColor(0.0, 1.0, 0.0);
-//    ////figura
-//    //setColor(0.0, 0.0, 0.0);
-//    ////endfigura
-//#endif //#if USE_OPENGL
+  //#if USE_OPENGL
+  //    setColor(0.0, 1.0, 0.0);
+  //    ////figura
+  //    //setColor(0.0, 0.0, 0.0);
+  //    ////endfigura
+  //#endif //#if USE_OPENGL
 
-    lastVertexId = lastEdgeId = lastFaceId = 0;
+  lastVertexId = lastEdgeId = lastFaceId = 0;
 }
 
-Quadtree::~Quadtree()
-{
-    //quando boundary == NULL, entao a quadtree mate estah envolvida.
-    // nesse caso, os root->min e root->max sao os mesmos para as
-    // duas quadtrees, assim como a boundary. logo, root->min, root->max e
-    // boundary sao apagadas somente por uma das quadtrees
+Quadtree::~Quadtree() {
+  // quando boundary == NULL, entao a quadtree mate estah envolvida.
+  //  nesse caso, os root->min e root->max sao os mesmos para as
+  //  duas quadtrees, assim como a boundary. logo, root->min, root->max e
+  //  boundary sao apagadas somente por uma das quadtrees
 
-    if (root)
-    {
-        if (boundary)
-        {
-            delete root->getMin();
-            delete root->getMax();
-        }
-
-        delete root;
+  if (root) {
+    if (boundary) {
+      delete root->getMin();
+      delete root->getMax();
     }
 
-    if (boundary)
-    {
-        delete boundary;
-    }
+    delete root;
+  }
+
+  if (boundary) {
+    delete boundary;
+  }
+
+  leaves.clear();
+}
+
+void Quadtree::setFactor(double factor) { this->factor = factor; }
+
+double Quadtree::getFactor() { return factor; }
+
+void Quadtree::setBoundary(Boundary *boundary) { this->boundary = boundary; }
+
+Boundary *Quadtree::getBoundary() { return boundary; }
+
+void Quadtree::setRoot(QuadtreeCell *root) {
+  this->root = root;
+
+  if (root) {
+    QuadtreeCellList breadthSearch;
 
     leaves.clear();
-}
 
-void Quadtree::setFactor(double factor)
-{
-    this->factor = factor;
-}
+    breadthSearch.push_back(root);
 
-double Quadtree::getFactor()
-{
-    return factor;
-}
+    while (!breadthSearch.empty()) {
+      QuadtreeCell *cell = breadthSearch.front();
+      breadthSearch.pop_front();
 
-void Quadtree::setBoundary(Boundary *boundary)
-{
-    this->boundary = boundary;
-}
-
-Boundary *Quadtree::getBoundary()
-{
-    return boundary;
-}
-
-void Quadtree::setRoot(QuadtreeCell *root)
-{
-    this->root = root;
-
-    if (root)
-    {
-        QuadtreeCellList breadthSearch;
-
-        leaves.clear();
-
-        breadthSearch.push_back(root);
-
-        while (!breadthSearch.empty())
-        {
-            QuadtreeCell *cell = breadthSearch.front();
-            breadthSearch.pop_front();
-
-            if (cell->subdivided())
-            {
-                breadthSearch.push_back(cell->getChild(QUAD_BOTTOM_LEFT));
-                breadthSearch.push_back(cell->getChild(QUAD_BOTTOM_RIGHT));
-                breadthSearch.push_back(cell->getChild(QUAD_TOP_RIGHT));
-                breadthSearch.push_back(cell->getChild(QUAD_TOP_LEFT));
-            }
-            else
-            {
-                leaves.push_back(cell);
-            }
-        }
+      if (cell->subdivided()) {
+        breadthSearch.push_back(cell->getChild(QUAD_BOTTOM_LEFT));
+        breadthSearch.push_back(cell->getChild(QUAD_BOTTOM_RIGHT));
+        breadthSearch.push_back(cell->getChild(QUAD_TOP_RIGHT));
+        breadthSearch.push_back(cell->getChild(QUAD_TOP_LEFT));
+      } else {
+        leaves.push_back(cell);
+      }
     }
+  }
 }
 
-QuadtreeCell *Quadtree::getRoot()
-{
-    return root;
+QuadtreeCell *Quadtree::getRoot() { return root; }
+
+void Quadtree::addLeaves(QuadtreeCell *cell) {
+  leaves.remove(cell);
+
+  leaves.push_back(cell->getChild(QUAD_BOTTOM_LEFT));
+  leaves.push_back(cell->getChild(QUAD_BOTTOM_RIGHT));
+  leaves.push_back(cell->getChild(QUAD_TOP_RIGHT));
+  leaves.push_back(cell->getChild(QUAD_TOP_LEFT));
 }
 
-void Quadtree::addLeaves(QuadtreeCell *cell)
-{
-    leaves.remove(cell);
+QuadtreeCellList Quadtree::getLeaves() { return leaves; }
 
-    leaves.push_back(cell->getChild(QUAD_BOTTOM_LEFT));
-    leaves.push_back(cell->getChild(QUAD_BOTTOM_RIGHT));
-    leaves.push_back(cell->getChild(QUAD_TOP_RIGHT));
-    leaves.push_back(cell->getChild(QUAD_TOP_LEFT));
+int Quadtree::getNumCells() { return root ? root->getNumCells() : 0; }
+
+Vertex *Quadtree::getMin() { return root ? root->getMin() : NULL; }
+
+Vertex *Quadtree::getMax() { return root ? root->getMax() : NULL; }
+
+long int Quadtree::getCellId() { return ++id; }
+
+void Quadtree::findCell(Edge *e) {
+  QuadtreeCell *q = root->findCell(e);
+
+  if (!q) {
+    return;
+  }
+
+  e->setCell(q);
+
+  while (q) {
+    q->addEdge(e);
+
+    q = q->getParent();
+  }
 }
 
-QuadtreeCellList Quadtree::getLeaves()
-{
-    return leaves;
-}
+bool Quadtree::in(Vertex *v) { return root->in(v); }
 
-int Quadtree::getNumCells()
-{
-    return root ? root->getNumCells() : 0;
-}
+bool Quadtree::on(Vertex *v) { return root->on(v); }
 
-Vertex *Quadtree::getMin()
-{
-    return root ? root->getMin() : NULL;
-}
+bool Quadtree::out(Vertex *v) { return root->out(v); }
 
-Vertex *Quadtree::getMax()
-{
-    return root ? root->getMax() : NULL;
-}
+enum MethodStatus Quadtree::generate(const FaceList &oldmesh) {
+  // 1o Passo
+  if (!root) {
+    double minX, minY, maxX, maxY;
 
-long int Quadtree::getCellId()
-{
-    return ++id;
-}
+    boundary->getBox(&minX, &minY, &maxX, &maxY);
 
-void Quadtree::findCell(Edge *e)
-{
-    QuadtreeCell *q = root->findCell(e);
+    double spanX = maxX - minX;
+    double spanY = maxY - minY;
 
-    if (!q)
-    {
-        return;
+    double midX = (minX + maxX) / 2.0;
+    double midY = (minY + maxY) / 2.0;
+
+    if (spanX > spanY) {
+      minY = midY - spanX / 2.0;
+      maxY = midY + spanX / 2.0;
+    } else {
+      minX = midX - spanY / 2.0;
+      maxX = midX + spanY / 2.0;
     }
 
-    e->setCell(q);
+    Vertex *min = new Vertex(minX, minY);
+    Vertex *max = new Vertex(maxX, maxY);
 
-    while (q)
-    {
-        q->addEdge(e);
+    root = new QuadtreeCell(getCellId(), /*mainDrive, */ this, min, max);
+  }
 
-        q = q->getParent();
+  leaves.push_back(root);
+
+  EdgeList edges = boundary->getEdges();
+
+  for (EdgeList::iterator iter = edges.begin(); iter != edges.end(); iter++) {
+    root->subdivide((*iter));
+  }
+
+  //    escreve(this, 1);
+
+  for (FaceList::const_iterator iter = oldmesh.begin(); iter != oldmesh.end();
+       iter++) {
+    root->subdivide((*iter));
+  }
+
+  //	escreve(this, 2);
+
+  for (EdgeList::iterator iter = edges.begin(); iter != edges.end(); iter++) {
+    findCell((*iter));
+  }
+
+  for (EdgeList::iterator iter = edges.begin(); iter != edges.end(); iter++) {
+    (*iter)->setLen(-1.0);
+  }
+
+  return QUAD_INITIAL_TREE_DONE;
+}
+
+enum MethodStatus Quadtree::refineToLevel() {
+  // 2o Passo
+  EdgeList edges = boundary->getEdges();
+
+  long int minLevel = __LONG_MAX__;
+
+  for (EdgeList::iterator iter = edges.begin(); iter != edges.end(); iter++) {
+    long int level = (*iter)->getCell()->getLevel();
+
+    if (level < minLevel) {
+      minLevel = level;
     }
+  }
+
+  root->subdivideToLevel(minLevel);
+
+  return QUAD_REFINE_TO_LEVEL_DONE;
 }
 
-bool Quadtree::in(Vertex *v)
-{
-    return root->in(v);
-}
+enum MethodStatus Quadtree::refineAccordingToNeighbors() {
+  QuadtreeCellList oldLeaves = leaves;
 
-bool Quadtree::on(Vertex *v)
-{
-    return root->on(v);
-}
+  while (!oldLeaves.empty()) {
+    QuadtreeCell *cell = oldLeaves.front();
+    oldLeaves.pop_front();
 
-bool Quadtree::out(Vertex *v)
-{
-    return root->out(v);
-}
-
-enum MethodStatus Quadtree::generate(const FaceList &oldmesh)
-{
-    //1o Passo
-    if (!root)
-    {
-        double minX, minY, maxX, maxY;
-
-        boundary->getBox(&minX, &minY, &maxX, &maxY);
-
-        double spanX = maxX - minX;
-        double spanY = maxY - minY;
-
-        double midX = (minX + maxX)/2.0;
-        double midY = (minY + maxY)/2.0;
-
-        if (spanX > spanY)
-        {
-            minY = midY - spanX/2.0;
-            maxY = midY + spanX/2.0;
-        }
-        else
-        {
-            minX = midX - spanY/2.0;
-            maxX = midX + spanY/2.0;
-        }
-
-        Vertex *min = new Vertex(minX, minY);
-        Vertex *max = new Vertex(maxX, maxY);
-
-        root = new QuadtreeCell(getCellId(), /*mainDrive, */this, min, max);
+    if (cell->subdivideAccordingToNeighbors()) {
+      oldLeaves = leaves;
     }
+  }
 
-    leaves.push_back(root);
+  //	escreve(this, 3);
 
-    EdgeList edges = boundary->getEdges();
-
-    for (EdgeList::iterator iter = edges.begin();
-         iter != edges.end(); iter++)
-    {
-        root->subdivide((*iter));
-    }
-
-    //    escreve(this, 1);
-
-    for (FaceList::const_iterator iter = oldmesh.begin();
-         iter != oldmesh.end(); iter++)
-    {
-        root->subdivide((*iter));
-    }
-
-    //	escreve(this, 2);
-
-    for (EdgeList::iterator iter = edges.begin();
-         iter != edges.end(); iter++)
-    {
-        findCell((*iter));
-    }
-
-    for (EdgeList::iterator iter = edges.begin();
-         iter != edges.end(); iter++)
-    {
-        (*iter)->setLen(-1.0);
-    }
-
-    return QUAD_INITIAL_TREE_DONE;
+  return QUAD_REFINE_ACCORDING_TO_NEIGHBORS_DONE;
 }
 
-enum MethodStatus Quadtree::refineToLevel()
-{
-    //2o Passo
-    EdgeList edges = boundary->getEdges();
+bool Quadtree::execute(const FaceList &oldmesh) {
+  if (generate(oldmesh) != QUAD_INITIAL_TREE_DONE) {
+    return false;
+  }
 
-    long int minLevel = __LONG_MAX__;
+  if (refineToLevel() != QUAD_REFINE_TO_LEVEL_DONE) {
+    return false;
+  }
 
-    for (EdgeList::iterator iter = edges.begin();
-         iter != edges.end(); iter++)
-    {
-        long int level = (*iter)->getCell()->getLevel();
+  if (refineAccordingToNeighbors() != QUAD_REFINE_ACCORDING_TO_NEIGHBORS_DONE) {
+    return false;
+  }
 
-        if (level < minLevel)
-        {
-            minLevel = level;
-        }
-    }
-
-    root->subdivideToLevel(minLevel);
-
-    return QUAD_REFINE_TO_LEVEL_DONE;
+  return true;
 }
 
-enum MethodStatus Quadtree::refineAccordingToNeighbors()
-{
-    QuadtreeCellList oldLeaves = leaves;
+long int Quadtree::vertexId() { return ++lastVertexId; }
 
-    while (!oldLeaves.empty())
-    {
-        QuadtreeCell *cell = oldLeaves.front();
-        oldLeaves.pop_front();
+long int Quadtree::edgeId() { return ++lastEdgeId; }
 
-        if (cell->subdivideAccordingToNeighbors())
-        {
-            oldLeaves = leaves;
-        }
-    }
+long int Quadtree::faceId() { return ++lastFaceId; }
 
-    //	escreve(this, 3);
+EdgeList Quadtree::getFront() { return front; }
 
-    return QUAD_REFINE_ACCORDING_TO_NEIGHBORS_DONE;
+EdgeList Quadtree::getEdges() { return edges; }
+
+VertexList Quadtree::getVertices() { return vertices; }
+
+FaceList Quadtree::getMesh() { return mesh; }
+
+void Quadtree::add(Vertex *v) { vertices.push_back(v); }
+
+void Quadtree::add(Edge *e) { edges.push_back(e); }
+
+void Quadtree::add(Face *f) { mesh.push_back(f); }
+
+void Quadtree::addFront(Edge *e) {
+  front.push_back(e);
+
+  e->setFree(true);
+
+  // GAMBIARRA
+  e->setInBoundary(true);
 }
 
-bool Quadtree::execute(const FaceList &oldmesh)
-{
-    if (generate(oldmesh) != QUAD_INITIAL_TREE_DONE)
-    {
-        return false;
-    }
+enum MethodStatus Quadtree::makeTemplateBasedMesh() {
+  root->sortNeighbors();
 
-    if (refineToLevel() != QUAD_REFINE_TO_LEVEL_DONE)
-    {
-        return false;
-    }
+  // cout << "ordenou vizinhos" << endl;
 
-    if (refineAccordingToNeighbors() != QUAD_REFINE_ACCORDING_TO_NEIGHBORS_DONE)
-    {
-        return false;
-    }
+  lastVertexId = boundary->getLastVertexId();
+  lastEdgeId = boundary->getLastEdgeId();
 
-    return true;
+  root->makeOuterVertices();
+
+  // cout << "criou vertices" << endl;
+
+  root->makeOuterEdges();
+
+  // cout << "criou arestas" << endl;
+
+  root->makeTemplateBasedMesh();
+
+  // cout << "fez a malha" << endl;
+
+  return QUAD_MAKE_TEMPLATE_BASED_MESH_DONE;
 }
 
-long int Quadtree::vertexId()
-{
-    return ++lastVertexId;
-}
+string Quadtree::getText() {
+  string s;
 
-long int Quadtree::edgeId()
-{
-    return ++lastEdgeId;
-}
-
-long int Quadtree::faceId()
-{
-    return ++lastFaceId;
-}
-
-EdgeList Quadtree::getFront()
-{
-    return front;
-}
-
-EdgeList Quadtree::getEdges()
-{
-    return edges;
-}
-
-VertexList Quadtree::getVertices()
-{
-    return vertices;
-}
-
-FaceList Quadtree::getMesh()
-{
-    return mesh;
-}
-
-void Quadtree::add(Vertex *v)
-{
-    vertices.push_back(v);
-}
-
-void Quadtree::add(Edge *e)
-{
-    edges.push_back(e);
-}
-
-void Quadtree::add(Face *f)
-{
-    mesh.push_back(f);
-}
-
-void Quadtree::addFront(Edge *e)
-{
-    front.push_back(e);
-
-    e->setFree(true);
-
-    //GAMBIARRA
-    e->setInBoundary(true);
-}
-
-enum MethodStatus Quadtree::makeTemplateBasedMesh()
-{
-    root->sortNeighbors();
-
-    //cout << "ordenou vizinhos" << endl;
-
-    lastVertexId = boundary->getLastVertexId();
-    lastEdgeId = boundary->getLastEdgeId();
-
-    root->makeOuterVertices();
-
-    //cout << "criou vertices" << endl;
-
-    root->makeOuterEdges();
-
-    //cout << "criou arestas" << endl;
-
-    root->makeTemplateBasedMesh();
-
-    //cout << "fez a malha" << endl;
-
-    return QUAD_MAKE_TEMPLATE_BASED_MESH_DONE;
-}
-
-string Quadtree::getText()
-{
-    string s;
-
-    return s;
+  return s;
 }
 
 //#if USE_OPENGL
-//void Quadtree::highlight()
+// void Quadtree::highlight()
 //{
 //    setColor(0.0, 0.0, 1.0);
 //}
 
-//void Quadtree::unhighlight()
+// void Quadtree::unhighlight()
 //{
-//    setColor(1.0, 0.0, 0.0);
-//}
+//     setColor(1.0, 0.0, 0.0);
+// }
 
-//void Quadtree::draw()
+// void Quadtree::draw()
 //{
-//    if (root)
-//    {
-//        /*Vertex *v[4] = {
-//            new Vertex(root->getMin()->getX(), root->getMin()->getY()),
-//            new Vertex(root->getMax()->getX(), root->getMin()->getY()),
-//            new Vertex(root->getMax()->getX(), root->getMax()->getY()),
-//            new Vertex(root->getMin()->getX(), root->getMax()->getY())
-//        };
+//     if (root)
+//     {
+//         /*Vertex *v[4] = {
+//             new Vertex(root->getMin()->getX(), root->getMin()->getY()),
+//             new Vertex(root->getMax()->getX(), root->getMin()->getY()),
+//             new Vertex(root->getMax()->getX(), root->getMax()->getY()),
+//             new Vertex(root->getMin()->getX(), root->getMax()->getY())
+//         };
 
 //        Edge *e[4] = {
 //            new Edge(v[0], v[1]),

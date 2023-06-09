@@ -12,33 +12,33 @@ This source code is under GNU General Public License v3 */
 #ifndef Arquivo_h
 #define Arquivo_h
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iostream>
 #include <list>
+#include <string>
+
 #include "../Data/Modelo.h"
 
 using namespace std;
 
-class Arquivo
-{
-    string nome;
-    ifstream entrada;
-    list < string > curvas;
-    list < string > patches;
+class Arquivo {
+  string nome;
+  ifstream entrada;
+  list<string> curvas;
+  list<string> patches;
 
-    void lerCurvas( const string leitura ); // lê todas as curvas do arquivo
-    void lerPatches( const string leitura ); // lê todos os patches do arquivo
-    void criarCurvasPara (); // cria as curvas a partir da list
-    void criarPatchesPara (); // cria os patches a partir da list
-    char* convertaString( string fonte );
+  void lerCurvas(const string leitura);   // lê todas as curvas do arquivo
+  void lerPatches(const string leitura);  // lê todos os patches do arquivo
+  void criarCurvasPara();                 // cria as curvas a partir da list
+  void criarPatchesPara();                // cria os patches a partir da list
+  char* convertaString(string fonte);
 
-public :
-    string getNome();
-    void lerArquivoPara ( /*Modelo& modelo*/ );
-    Arquivo ( const char* nome );
-    ~Arquivo();
+ public:
+  string getNome();
+  void lerArquivoPara(/*Modelo& modelo*/);
+  Arquivo(const char* nome);
+  ~Arquivo();
 };
 #endif

@@ -13,44 +13,55 @@ This source code is under GNU General Public License v3 */
 #define AdaptadorPorCurvatura_h
 
 #include <cmath>
-#include <map>
 #include <cstdlib>
+#include <map>
 
-#include "Adaptador.h"
-#include "../Data/Patch/CoonsPatch.h"
-#include "../Data/Mesh/SubMalha.h"
-#include "../Data/Curve/CurvaParametrica.h"
-#include "../Curvature/CurvaturaAnalitica.h"
-#include "../Curvature/CurvaturaDiscreta.h"
-#include "../Data/Tree/BinTree.h"
 #include "../Crabmesh/Aft/AdvancingFront.h"
 #include "../Crabmesh/Aft/Boundary.h"
-#include "../Data/Face.h"
-#include "../Data/Vertex.h"
+#include "../Crabmesh/Performer/RangedIdManager.h"
+#include "../Curvature/CurvaturaAnalitica.h"
+#include "../Curvature/CurvaturaDiscreta.h"
+#include "../Data/Curve/CurvaParametrica.h"
 #include "../Data/Definitions.h"
 #include "../Data/Edge.h"
 #include "../Data/Face.h"
+#include "../Data/Mesh/SubMalha.h"
+#include "../Data/Patch/CoonsPatch.h"
+#include "../Data/Tree/BinTree.h"
+#include "../Data/Vertex.h"
 #include "../Parallel/TMCommunicator.h"
-#include "../Crabmesh/Performer/RangedIdManager.h"
+#include "Adaptador.h"
 
-class AdaptadorPorCurvatura : public Adaptador
-{
+class AdaptadorPorCurvatura : public Adaptador {
 #if USE_OPENMP
-    static list<Ponto*> adaptaCurvaByCurvaOmp (Curva*c, Performer::IdManager *idManager, double fator_dis = 1.0);
-    static list<Ponto *> adaptaCurvaBySuperficieOmp(Curva*c, Performer::IdManager *idManager, double fator_dis = 1.0);
-    static SubMalha* adaptaDominioOmp (CoonsPatch* patch, Performer::IdManager *idManager, double fator_dis = 1.0 );
-#endif //#USE_OPENMP
+  static list<Ponto*> adaptaCurvaByCurvaOmp(Curva* c,
+                                            Performer::IdManager* idManager,
+                                            double fator_dis = 1.0);
+  static list<Ponto*> adaptaCurvaBySuperficieOmp(
+      Curva* c, Performer::IdManager* idManager, double fator_dis = 1.0);
+  static SubMalha* adaptaDominioOmp(CoonsPatch* patch,
+                                    Performer::IdManager* idManager,
+                                    double fator_dis = 1.0);
+#endif  //#USE_OPENMP
 
-    static list < Ponto* > adaptaCurvaByCurva (Curva*, map < Ponto*, Ponto* > &, Performer::IdManager *idManager, double fator_dis = 1.0 );
-    static list < Ponto* > adaptaCurvaBySuperficie ( Curva* c,  map < Ponto*, Ponto* > &, Performer::IdManager *idManager, double fator_dis = 1.0 );
+  static list<Ponto*> adaptaCurvaByCurva(Curva*, map<Ponto*, Ponto*>&,
+                                         Performer::IdManager* idManager,
+                                         double fator_dis = 1.0);
+  static list<Ponto*> adaptaCurvaBySuperficie(Curva* c, map<Ponto*, Ponto*>&,
+                                              Performer::IdManager* idManager,
+                                              double fator_dis = 1.0);
 
-    static tuple <double, double> curvatura ( CurvaturaAnalitica& ka, CurvaturaDiscreta& kd );
-    static double novoTamanho ( const double, const double, const double, const double );
-    static void adaptaCurvas ( CoonsPatch& patch, const unsigned int );
-    static SubMalha* adaptaDominio (CoonsPatch* patch, Performer::IdManager *idManager, double fator_dis = 1.0 );
-    virtual void fazNada ()=0;
+  static tuple<double, double> curvatura(CurvaturaAnalitica& ka,
+                                         CurvaturaDiscreta& kd);
+  static double novoTamanho(const double, const double, const double,
+                            const double);
+  static void adaptaCurvas(CoonsPatch& patch, const unsigned int);
+  static SubMalha* adaptaDominio(CoonsPatch* patch,
+                                 Performer::IdManager* idManager,
+                                 double fator_dis = 1.0);
+  virtual void fazNada() = 0;
 
-    friend class GeradorAdaptativoPorCurvatura;
+  friend class GeradorAdaptativoPorCurvatura;
 };
 
 #endif

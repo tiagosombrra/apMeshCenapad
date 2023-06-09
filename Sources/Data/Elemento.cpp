@@ -11,22 +11,12 @@ This source code is under GNU General Public License v3 */
 
 #include "../../Headers/Data/Elemento.h"
 
-void Elemento::setId(unsigned long i) {
-    this->id = i;
-}
+void Elemento::setId(unsigned long i) { this->id = i; }
 
-unsigned long Elemento::getId() {
-    return this->id;
-}
+unsigned long Elemento::getId() { return this->id; }
 
-double Elemento::getArea() const {
-    return this->area;
-}
+double Elemento::getArea() const { return this->area; }
 
-Vetor Elemento::getNormal() const {
-    return this->normal;
-}
+Vetor Elemento::getNormal() const { return this->normal; }
 
-Elemento::~Elemento() {
-
-}
+Elemento::~Elemento() {}

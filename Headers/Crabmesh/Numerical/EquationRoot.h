@@ -4,18 +4,13 @@
 #include "../../Data/Definitions.h"
 #include "EquationRootFunction.h"
 
-namespace Data
-{
-namespace Numerical
-{
-class EquationRoot
-{
-public:
-
-    virtual double execute(EquationRootFunction *function) = 0;
-
+namespace Data {
+namespace Numerical {
+class EquationRoot {
+ public:
+  virtual double execute(EquationRootFunction *function) = 0;
 };
-}
-}
+}  // namespace Numerical
+}  // namespace Data
 
-#endif //#ifndef _DATA_NUMERICAL_EQUATION_ROOT_H_
+#endif  //#ifndef _DATA_NUMERICAL_EQUATION_ROOT_H_
